@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use App\Models\Category;
+use App\Models\Mcq;
 use App\Models\Quiz;
 use Illuminate\Http\Request;
 use Illuminate\Http\Request as HttpRequest;
@@ -115,6 +116,46 @@ class AdminController extends Controller
         return redirect('admin-categories');
     }
 
+    public function addMCQs(Request $request){
+
+        $request->validate([
+            "question" => "required",
+            "a"=>"required",
+            "b"=>"required",
+            "c"=>"required",
+            "d"=>"required",
+            "correct_ans"=>"required"
+        ]);
+
+       $quiz = Session::get('quizDetails');
+        $admin = Session::get('admin');
+        $mcq = new Mcq();
+
+        $mcq->question = $request->question;
+        $mcq->a = $request->a;
+        $mcq->b = $request->b;
+        $mcq->c = $request->c;
+        $mcq->d = $request->d;
+        $mcq->correct_ans = $request->correct_ans;
+
+        $mcq->admin_id = $admin->id;
+        $mcq->quiz_id = $quiz->id;
+        $mcq->category_id = $quiz->category_id;
+
+        if($mcq->save()){
+            if($request->submit == "add-more"){
+                return redirect(url()->previous());
+            }else{
+                Session::forget('quizDetails');
+                return redirect('/admin-categories');
+            }
+        }
+    }
+
+    public function endQuiz(){
+        Session::forget('quizDetails');
+        return redirect('/admin-categories');
+    }
 
     public function logout(){
         Session::forget('admin');
