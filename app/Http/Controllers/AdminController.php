@@ -33,7 +33,7 @@ class AdminController extends Controller
         ]);
         }
         Session::put('admin',$admin);
-        return redirect('dashboard');
+        return redirect('admin-categories');
     }
 
     public function dashboard(){
@@ -157,14 +157,31 @@ class AdminController extends Controller
         }
     }
 
-    public function showQuiz($id){
+    public function showQuiz($id,$quizName){
         $admin = Session::get('admin');
         $mcqs = Mcq::where('quiz_id',$id)->get();
 
         if($admin){
             return view('show-quiz',[
                 "name"=>$admin->name,
-                "mcqs" => $mcqs
+                "mcqs" => $mcqs,
+                "quizName" => $quizName
+            ]);
+        }else{
+            $admin = Session::get('admin');
+            return redirect('admin-login');
+        }
+    }
+
+    public function quizList($id,$category){
+        $admin = Session::get('admin');
+
+        if($admin){
+            $quizData = Quiz::where('category_id',$id)->get();
+            return view('quiz-list',[
+                "name"=>$admin->name,
+                "quizData" => $quizData,
+                "category" =>$category
             ]);
         }else{
             $admin = Session::get('admin');

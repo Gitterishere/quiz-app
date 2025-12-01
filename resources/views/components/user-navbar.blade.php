@@ -1,0 +1,13 @@
+<nav class=" bg-white shadow-md px-4 py-3">
+    <div class=" flex justify-between items-center">
+        <div class=" text-2xl text-orange-400 hover:text-blue-500 cursor-pointer">
+            Quiz System
+        </div>
+        <div class=" space-x-4">
+            <a href="/" class=" text-orange-400 hover:text-blue-500">Home</a>
+            <a href="/admin-categories" class=" text-orange-400 hover:text-blue-500">Categories</a>
+            <a href="" class=" text-orange-400 hover:text-blue-500">Login</a>
+            <a href="/admin-logout" class=" text-orange-400 hover:text-blue-500">Blog</a>
+        </div>
+    </div>
+</nav>
