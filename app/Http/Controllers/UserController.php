@@ -18,6 +18,14 @@ class UserController extends Controller
     );
     }
 
+    public function userSignup(Request $request){
+        $validate = $request->validate([
+            "name"=>"required|min:3",
+            "email"=>"required|email",
+            "password"=>"required|min:3|confirmed"
+        ]);
+    }
+
     public function userQuizList($id,$category){
 
         $quizData = Quiz::withCount('Mcq')->where('category_id',$id)->get();

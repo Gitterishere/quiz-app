@@ -19,7 +19,7 @@
         <h2 class=" text-2xl text-center text-orange-400 mb-4 font-bold pt-2 ">This Quiz Contains {{$quizCount}} Questions and has no Limit to attempt.</h2>
         <h1 class=" text-4xl text-center text-orange-400 mb-4 font-bold pt-2 ">Good Luck</h1>
 
-        <button type="submit" class="  bg-blue-500 rounded-md px-4 py-2 my-5 text-white text-lg hover:cursor-pointer">Login/SignUp For Starting The Quiz</button>
+        <a type="submit" href="/user-signup" class="  bg-blue-500 rounded-md px-4 py-2 my-5 text-white text-lg hover:cursor-pointer">Login/SignUp For Starting The Quiz</a>
 
 
     </div>
