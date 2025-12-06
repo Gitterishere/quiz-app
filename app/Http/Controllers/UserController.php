@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 
+use function PHPSTORM_META\map;
+
 class UserController extends Controller
 {
     public function welcome(){
@@ -94,6 +96,8 @@ class UserController extends Controller
     public function startQuiz($id, $name){
         $quizCount = Mcq::where('quiz_id',$id)->count();
         $quizName = $name;
+        $mcqs = Mcq::where('quiz_id',$id)->get();
+        Session::put('firstMCQ',$mcqs[0]);
 
         return view('start-quiz',[
             "quizCount" => $quizCount,
@@ -101,8 +105,44 @@ class UserController extends Controller
         ]);
     }
 
+    public function mcq($id,$name){
+        $currentQuiz = [];
+        $currentQuiz['totalMCQ'] = Mcq::where('quiz_id',Session::get('firstMCQ')->quiz_id)->count();
+        $currentQuiz['currentMcq'] = 1;
+        $currentQuiz['quizName'] = $name;
+        $currentQuiz['quizId'] = Session::get('firstMCQ')->quiz_id;
+        Session::put('currentQuiz',$currentQuiz);
+        $mcqData = Mcq::find($id);
+        return view('mcq-page',[
+            "quizName"=>$name,
+            "mcqData"=>$mcqData
+        ]);
+
+    }
+
+    public function selectAndNext($id){
+        $currentQuiz = Session::get('currentQuiz');
+        $currentQuiz['currentMcq'] += 1;
+        $mcqData = Mcq::where([
+            ['id','>',$id],
+            ['quiz_id','=',$currentQuiz['quizId']]
+        ])->first();
+        Session::put('currentQuiz',$currentQuiz);
+
+        if($mcqData){
+
+            return view('mcq-page',[
+                "quizName"=>$currentQuiz['quizName'],
+                "mcqData"=>$mcqData
+            ]);
+        }else{
+            return "Results Page";
+        }
+    }
+
     public function userLogout(){
         Session::forget('user');
         return redirect('/');
     }
+
 }
