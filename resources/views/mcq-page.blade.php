@@ -24,33 +24,34 @@
     <!-- Question Box -->
     <div class="bg-white shadow-xl rounded-xl p-6">
 
-        <h3 class="text-xl font-bold text-green-900 mb-4">
+        <h3 class="text-xl font-bold text-center text-green-900 mb-4">
             {{$mcqData->question}}
         </h3>
 
         <form method="post" class=" space-y-4" action="/select-next/{{ $mcqData->id }}">
             @csrf
-            <label class="block rounded-xl border p-4 cursor-pointer hover:bg-blue-50 shadow-sm" for="option_1">
+            <input type="hidden" name="id" value="{{ $mcqData->id }}">
+            <label class="block rounded-xl border p-4 cursor-pointer hover:bg-blue-50 shadow-xl" for="option_1">
                 <div class="flex items-center gap-3">
-                    <input type="radio" id="option_1" name="option" class="form-radio text-green-600">
+                    <input type="radio" id="option_1" name="option" value="a" class="form-radio text-green-600">
                     <span class="text-lg">{{$mcqData->a}}</span>
                 </div>
             </label>
-            <label class="block rounded-xl border p-4 cursor-pointer hover:bg-blue-50 shadow-sm" for="option_2">
+            <label class="block rounded-xl border p-4 cursor-pointer hover:bg-blue-50 shadow-xl" for="option_2">
                 <div class="flex items-center gap-3">
-                    <input type="radio" id="option_2" name="option" class="form-radio text-green-600">
+                    <input type="radio" id="option_2" name="option" value="b" class="form-radio text-green-600">
                     <span class="text-lg">{{$mcqData->b}}</span>
                 </div>
             </label>
-            <label class="block rounded-xl border p-4 cursor-pointer hover:bg-blue-50 shadow-sm" for="option_3">
+            <label class="block rounded-xl border p-4 cursor-pointer hover:bg-blue-50 shadow-xl" for="option_3">
                 <div class="flex items-center gap-3">
-                    <input type="radio" id="option_3" name="option" class="form-radio text-green-600">
+                    <input type="radio" id="option_3" name="option" value="c" class="form-radio text-green-600">
                     <span class="text-lg">{{$mcqData->c}}</span>
                 </div>
             </label>
-            <label class="block rounded-xl border p-4 cursor-pointer hover:bg-blue-50 shadow-sm" for="option_4">
+            <label class="block rounded-xl border p-4 cursor-pointer hover:bg-blue-50 shadow-xl" for="option_4">
                 <div class="flex items-center gap-3">
-                    <input type="radio" id="option_4" name="option" class="form-radio text-green-600">
+                    <input type="radio" id="option_4" name="option" value="d" class="form-radio text-green-600">
                     <span class="text-lg">{{$mcqData->d}}</span>
                 </div>
             </label>

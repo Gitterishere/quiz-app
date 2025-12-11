@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Mcq;
+use App\Models\MCQ_Record;
 use App\Models\Quiz;
+use App\Models\Record;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -106,38 +108,102 @@ class UserController extends Controller
     }
 
     public function mcq($id,$name){
-        $currentQuiz = [];
-        $currentQuiz['totalMCQ'] = Mcq::where('quiz_id',Session::get('firstMCQ')->quiz_id)->count();
-        $currentQuiz['currentMcq'] = 1;
-        $currentQuiz['quizName'] = $name;
-        $currentQuiz['quizId'] = Session::get('firstMCQ')->quiz_id;
-        Session::put('currentQuiz',$currentQuiz);
-        $mcqData = Mcq::find($id);
-        return view('mcq-page',[
-            "quizName"=>$name,
-            "mcqData"=>$mcqData
-        ]);
+        $record = new Record();
+        $record->user_id = Session::get('user')->id;
+        $record->quiz_id = Session::get('firstMCQ')->quiz_id;
+        $record->status = 1;
 
-    }
-
-    public function selectAndNext($id){
-        $currentQuiz = Session::get('currentQuiz');
-        $currentQuiz['currentMcq'] += 1;
-        $mcqData = Mcq::where([
-            ['id','>',$id],
-            ['quiz_id','=',$currentQuiz['quizId']]
-        ])->first();
-        Session::put('currentQuiz',$currentQuiz);
-
-        if($mcqData){
-
+        if($record->save()){
+            $currentQuiz = [];
+            $currentQuiz['totalMCQ'] = Mcq::where('quiz_id',Session::get('firstMCQ')->quiz_id)->count();
+            $currentQuiz['currentMcq'] = 1;
+            $currentQuiz['quizName'] = $name;
+            $currentQuiz['quizId'] = Session::get('firstMCQ')->quiz_id;
+            $currentQuiz['record_id'] = $record->id;
+            Session::put('currentQuiz',$currentQuiz);
+            $mcqData = Mcq::find($id);
             return view('mcq-page',[
-                "quizName"=>$currentQuiz['quizName'],
+                "quizName"=>$name,
                 "mcqData"=>$mcqData
             ]);
         }else{
-            return "Results Page";
+            return "Something Went Wrong";
         }
+
+    }
+
+
+
+    public function selectAndNext(Request $request, $id)
+    {
+        $currentQuiz = Session::get('currentQuiz');
+        $currentQuiz['currentMcq'] += 1;
+        $mcqData = Mcq::where([
+            ['id', '>', $id],
+            ['quiz_id', '=', $currentQuiz['quizId']]
+        ])->first();
+
+        $isExist = MCQ_Record::where([
+            ["record_id", "=", $currentQuiz['record_id']],
+            ["mcq_id", "=", $request->id],
+        ])->count();
+        if ($isExist < 1) {
+
+            $mcq_record = new MCQ_Record();
+            $mcq_record->record_id = $currentQuiz['record_id'];
+            $mcq_record->user_id = Session::get('user')->id;
+            $mcq_record->mcq_id = $request->id;
+            $mcq_record->select_answer = $request->option;
+            if ($request->option == Mcq::find($request->id)->correct_ans) {
+                $mcq_record->is_correct = 1;
+            } else {
+                $mcq_record->is_correct = 0;
+            }
+            if (!$mcq_record->save()) {
+                return "Something Went Wrong";
+            }
+            Session::put('currentQuiz', $currentQuiz);
+
+
+            if ($mcqData) {
+
+                return view('mcq-page', [
+                    "quizName" => $currentQuiz['quizName'],
+                    "mcqData" => $mcqData
+                ]);
+            }
+            Record::where('id', $currentQuiz['record_id'])
+            ->update(['status' => 2]);
+
+            // Fetch result
+            $resultData = MCQ_Record::WithMCQ()
+                ->where('record_id', $currentQuiz['record_id'])
+                ->get();
+
+            $correctAns = MCQ_Record::where('record_id', $currentQuiz['record_id'])
+                ->where('is_correct', 1)
+                ->count();
+
+            return view('quiz-result', [
+                "resultData" => $resultData,
+                "correctAns" => $correctAns
+            ]);
+        }
+    }
+
+    public function userDetails(){
+        $quizRecord = Record::WithQuiz()->where('user_id',Session::get('user')->id)->get();
+        return view('user-details',[
+            "quizRecord"=>$quizRecord
+        ]);
+    }
+
+    public function searchQuiz(Request $request){
+        $quizData = Quiz::withCount('Mcq')->where('name','Like','%'.$request->search.'%')->get();
+        return view('quiz-search',[
+            "quizData" => $quizData,
+            "quiz" => $request->search
+        ]);
     }
 
     public function userLogout(){

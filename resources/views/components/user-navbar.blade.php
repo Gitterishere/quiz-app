@@ -8,7 +8,7 @@
             <a href="/admin-categories" class=" text-orange-400 hover:text-blue-500">Categories</a>
 
             @if (session('user'))
-            <a href="" class=" text-orange-400 hover:text-blue-500">Welcome {{session('user')->name}}</a>
+            <a href="/user-details" class=" text-orange-400 hover:text-blue-500">Welcome {{session('user')->name}}</a>
             <a href="/user-logout" class=" text-orange-400 hover:text-blue-500">Logout</a>
             @else
             <a href="/user-login" class=" text-orange-400 hover:text-blue-500">Login</a>

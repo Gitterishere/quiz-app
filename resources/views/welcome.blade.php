@@ -16,9 +16,11 @@
         <h2 class=" text-4xl font-bold text-orange-400 p-5">Check Your Skills...</h2>
         <div class=" w-full max-w-md">
             <div class="relative">
-                <input class=" w-full rounded-2xl border border-gray-300 px-4 py-3 text-gray-700 shadow" type="text"
+                <form action="search-quiz" method="get">
+                    <input class=" w-full rounded-2xl border border-gray-300 px-4 py-3 text-gray-700 shadow" type="text" name="search"
                     name="" id="" placeholder="Seach Quiz...">
-                <button class=" absolute right-5 top-3"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    <button class=" absolute right-5 top-3"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </form>
             </div>
         </div>
         <div class=" w-200 pt-10">
