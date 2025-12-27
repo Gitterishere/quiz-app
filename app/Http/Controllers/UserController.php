@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\VerifyUser;
 use App\Models\Category;
 use App\Models\Mcq;
 use App\Models\MCQ_Record;
@@ -9,7 +10,9 @@ use App\Models\Quiz;
 use App\Models\Record;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 
 use function PHPSTORM_META\map;
@@ -17,12 +20,16 @@ use function PHPSTORM_META\map;
 class UserController extends Controller
 {
     public function welcome(){
-        $categories = Category::withCount('quizzes')->get();
+        $categories = Category::withCount('quizzes')->orderBy('quizzes_count','desc')->take(5)->get();
         return view('welcome',
         [
             "categories"=>$categories
         ]
     );
+    }
+
+    public function categories(){
+        return $categories = Category::withCount('quizzes')->orderBy('quizzes_count','desc')->get();;
     }
 
     public function userSignup(Request $request){
@@ -38,6 +45,10 @@ class UserController extends Controller
             "password"=>Hash::make($request->password)
         ]);
 
+        $link = Crypt::encryptString($user->email);
+        $link = url('/verify-user/'.$link);
+        Mail::to($user->email)->send(new VerifyUser($link));
+
         if($user){
             Session::put('user',$user);
             if(Session::has('quiz-user')){
@@ -46,6 +57,17 @@ class UserController extends Controller
                 return redirect($url);
             }
             return redirect('/');
+        }
+    }
+
+    public function verifyUser($email){
+        $orgEmail = Crypt::decryptString($email);
+        $user = User::where('email',$orgEmail)->first();
+        if($user){
+            $user->active=2;
+            if($user->save()){
+                return redirect('/');
+            }
         }
     }
 

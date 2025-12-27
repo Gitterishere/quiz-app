@@ -5,7 +5,7 @@
         </div>
         <div class=" space-x-4">
             <a href="/" class=" text-orange-400 hover:text-blue-500">Home</a>
-            <a href="/admin-categories" class=" text-orange-400 hover:text-blue-500">Categories</a>
+            <a href="/categories-list" class=" text-orange-400 hover:text-blue-500">Categories</a>
 
             @if (session('user'))
             <a href="/user-details" class=" text-orange-400 hover:text-blue-500">Welcome {{session('user')->name}}</a>
