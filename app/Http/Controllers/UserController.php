@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 
+use function Flasher\Toastr\Prime\toastr;
 use function PHPSTORM_META\map;
 
 class UserController extends Controller
@@ -55,8 +56,10 @@ class UserController extends Controller
             if(Session::has('quiz-user')){
                 $url = Session::get('quiz-user');
                 Session::forget('quiz-user');
+                toastr()->success("User Registered Successfully, Please Check The Mail To verify Your Email Address.");
                 return redirect($url);
             }
+            toastr()->success("User Registered Successfully, Please Check The Mail To verify Your Email Address.");
             return redirect('/');
         }
     }
@@ -67,6 +70,7 @@ class UserController extends Controller
         if($user){
             $user->active=2;
             if($user->save()){
+                toastr()->success("Email Verified Successfully.");
                 return redirect('/');
             }
         }
@@ -87,7 +91,8 @@ class UserController extends Controller
 
         $user = User::where('email',$request->email)->first();
         if(!$user || !Hash::check($request->password,$user->password)){
-            return "Invalid User Credentials";
+            toastr()->error("Invalid Credentials");
+            return redirect('user-login');
         }
 
         if($user){
@@ -95,8 +100,10 @@ class UserController extends Controller
             if(Session::has('quiz-user')){
                 $url = Session::get('quiz-user');
                 Session::forget('quiz-user');
+                toastr()->success("Logged In Successfully.");
                 return redirect($url);
             }
+            toastr()->success("Logged In Successfully.");
             return redirect('/');
         }
     }
@@ -105,6 +112,7 @@ class UserController extends Controller
         $link = Crypt::encryptString($request->email);
         $link = url('/user-forgot-password/'.$link);
         Mail::to($request->email)->send(new UserForgotPassword($link));
+        toastr()->success("Please Check The Mail To Set Your New Password.");
         return redirect('/');
     }
 
@@ -126,6 +134,7 @@ class UserController extends Controller
         if($user){
             $user->password = Hash::make($request->password);
             if($user->save()){
+                toastr()->success("Password Changed Successfully");
                 return redirect('user-login');
             }
         }
@@ -261,6 +270,7 @@ class UserController extends Controller
 
     public function userLogout(){
         Session::forget('user');
+        toastr()->success("Logged Out Successfully.");
         return redirect('/');
     }
 
