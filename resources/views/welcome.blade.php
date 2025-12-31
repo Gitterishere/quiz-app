@@ -24,7 +24,7 @@
             </div>
         </div>
         <div class=" w-200 pt-10">
-            <h1 class=" text-green-500  text-center  text-2xl">Category List</h1>
+            <h1 class=" text-green-500  text-center  text-2xl">Top Categories</h1>
             <ul class=" border border-gray-200 mt-5">
                 <li class="p-2 font-bold">
                     <ul class=" flex justify-between">
@@ -50,6 +50,34 @@
                 </li>
                 @endforeach
 
+            </ul>
+        </div>
+        <div class=" w-200 pt-1 mb-5">
+            <h1 class=" text-green-500  text-center  text-2xl my-10">Top Quiz</h1>
+            <ul class="border border-gray-200 mt-5">
+                <li class="p-2 font-bold">
+                    <ul class="flex justify-between">
+                        
+                        <li class="w-[300px] text-left">Name</li>
+
+                        <li class="w-[100px] text-center">Action</li>
+                    </ul>
+                </li>
+
+                @foreach($quizData as $item)
+                <li class="even:bg-gray-200 p-3">
+                    <ul class="flex justify-between">
+
+                        <li class="w-[300px] text-left">{{ $item->name }}</li>
+
+                        <li class="w-[100px] text-center">
+                            <a href="/start-quiz/{{ $item->id }}/{{ $item->name }}" class="font-bold text-green-500">
+                                Start Quiz
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                @endforeach
             </ul>
         </div>
     </div>
