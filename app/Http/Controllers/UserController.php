@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\UserForgotPassword;
 use App\Mail\VerifyUser;
 use App\Models\Category;
 use App\Models\Mcq;
@@ -97,6 +98,36 @@ class UserController extends Controller
                 return redirect($url);
             }
             return redirect('/');
+        }
+    }
+
+    public function userForgotPassword(Request $request){
+        $link = Crypt::encryptString($request->email);
+        $link = url('/user-forgot-password/'.$link);
+        Mail::to($request->email)->send(new UserForgotPassword($link));
+        return redirect('/');
+    }
+
+    public function userRestForgotPassword($email){
+        $orgEmail = Crypt::decryptString($email);
+        return view('user-set-forgot-password',[
+            "email"=>$orgEmail
+        ]);
+    }
+
+    public function userSetForgotPassword(Request $request){
+        $validate = $request->validate([
+
+            "email"=>"required|email",
+            "password"=>"required|min:3|confirmed"
+        ]);
+        $user = User::where('email',$request->email)->first();
+
+        if($user){
+            $user->password = Hash::make($request->password);
+            if($user->save()){
+                return redirect('user-login');
+            }
         }
     }
 

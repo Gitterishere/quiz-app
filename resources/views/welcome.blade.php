@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    <x-user-navbar />
+    <x-user-navbar class=" sticky"/>
     <div class=" flex flex-col min-h-screen items-center bg-gray-100">
         <h2 class=" text-4xl font-bold text-orange-400 p-5">Check Your Skills...</h2>
         <div class=" w-full max-w-md">

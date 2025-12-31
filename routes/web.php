@@ -36,6 +36,10 @@ Route::get('user-login-quiz',[UserController::class,'userLoginQuiz']);
 Route::get('search-quiz',[UserController::class,'searchQuiz']);
 Route::get('categories-list',[UserController::class,'categories']);
 Route::get('verify-user/{email}',[UserController::class,'verifyUser']);
+Route::view('user-forgot-password','user-forgot-password');
+Route::post('user-forgot-password',[UserController::class,'userForgotPassword']);
+Route::get('user-forgot-password/{email}',[UserController::class,'userRestForgotPassword']);
+Route::post('user-set-forgot-password',[UserController::class,'userSetForgotPassword']);
 
 Route::middleware('CheckUserAuth')->group(function(){
     Route::get('mcq/{id}/{name}',[UserController::class,'mcq']);
