@@ -35,7 +35,11 @@ class UserController extends Controller
     }
 
     public function categories(){
-        return $categories = Category::withCount('quizzes')->orderBy('quizzes_count','desc')->get();;
+        $categories = Category::withCount('quizzes')->orderBy('quizzes_count','desc')->paginate(3);
+
+        return view('categories-list',[
+            "categories" => $categories
+        ]);
     }
 
     public function userSignup(Request $request){
