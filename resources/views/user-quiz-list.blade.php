@@ -3,7 +3,7 @@
 
 <head>
 
-    <title>Show Category Wise Quiz Page</title>
+    <title>Category : {{ str_replace('-',' ',$category) }}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.6.0/css/all.min.css">
 
     @vite("resources/css/app.css")
@@ -15,7 +15,7 @@
 
     <div class=" bg-gray-100 flex flex-col items-center min-h-screen pt-5">
 
-        <h2 class=" text-2xl text-center text-orange-400 mb-4 font--bold ">Category Name : {{ $category}}</h2>
+        <h2 class=" text-2xl text-center text-orange-400 mb-4 font--bold ">Category Name : {{ str_replace('-',' ',$category) }}</h2>
 
         <div class=" w-200 pt-1">
 
@@ -36,7 +36,7 @@
                         <li class="w-[300px] text-left">{{ $item->name }}</li>
                         <li class="w-[150px] text-center">{{ $item->mcq_count }}</li>
                         <li class="w-[100px] text-center">
-                            <a href="/start-quiz/{{ $item->id }}/{{ $item->name }}" class="font-bold text-green-500">
+                            <a href="/start-quiz/{{ $item->id }}/{{ str_replace(' ','-',$item->name) }}" class="font-bold text-green-500">
                                 Start Quiz
                             </a>
                         </li>

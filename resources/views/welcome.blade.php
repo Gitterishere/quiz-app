@@ -3,7 +3,7 @@
 
 <head>
 
-    <title>Home Page</title>
+    <title>Quiz System Home Page</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.6.0/css/all.min.css">
 
     @vite("resources/css/app.css")
@@ -19,7 +19,7 @@
                 <form action="search-quiz" method="get">
                     <input class=" w-full rounded-2xl border border-gray-300 px-4 py-3 text-gray-700 shadow" type="text" name="search"
                     name="" id="" placeholder="Seach Quiz...">
-                    <button class=" absolute right-5 top-3"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    <button class=" absolute right-5 top-3 hover:cursor-pointer"><i class="fa-solid fa-magnifying-glass"></i></button>
                 </form>
             </div>
         </div>
@@ -43,7 +43,7 @@
 
                         <li class="w-30">
 
-                            <a href="/user-quiz-list/{{ $category->id }}/{{ $category->name }}"><i
+                            <a href="/user-quiz-list/{{ $category->id }}/{{ str_replace(' ','-',$category->name) }}"><i
                                     class="fa-solid fa-eye"></i></a>
                         </li>
                     </ul>
@@ -57,7 +57,7 @@
             <ul class="border border-gray-200 mt-5">
                 <li class="p-2 font-bold">
                     <ul class="flex justify-between">
-                        
+
                         <li class="w-[300px] text-left">Name</li>
 
                         <li class="w-[100px] text-center">Action</li>
@@ -71,7 +71,7 @@
                         <li class="w-[300px] text-left">{{ $item->name }}</li>
 
                         <li class="w-[100px] text-center">
-                            <a href="/start-quiz/{{ $item->id }}/{{ $item->name }}" class="font-bold text-green-500">
+                            <a href="/start-quiz/{{ $item->id }}/{{ str_replace(' ','-',$item->name) }}" class="font-bold text-green-500">
                                 Start Quiz
                             </a>
                         </li>

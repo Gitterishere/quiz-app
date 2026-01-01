@@ -36,7 +36,7 @@
                         <li class="w-[300px] text-left">{{ $item->name }}</li>
                         <li class="w-[150px] text-center">{{ $item->mcq_count }}</li>
                         <li class="w-[100px] text-center">
-                            <a href="/start-quiz/{{ $item->id }}/{{ $item->name }}" class="font-bold text-green-500">
+                            <a href="/start-quiz/{{ $item->id }}/{{ str_replace(' ','-',$item->name) }}" class="font-bold text-green-500">
                                 Start Quiz
                             </a>
                         </li>
