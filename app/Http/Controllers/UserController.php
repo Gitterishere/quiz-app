@@ -304,19 +304,7 @@ class UserController extends Controller
             "Content-disposition" => "attachment;filename=certificate.pdf"
         ]);
     }
-    // public function downloadCertificate(){
-    //    $data = [];
-
-    //     $data['quizName'] = str_replace('-',' ',Session::get('currentQuiz')['quizName']);
-    //     $data['userName'] = Session::get('user')['name'];
-
-    //     $pdf = PDF::loadView('certificate', $data);
-    //     return $pdf->download('certificate.pdf');
-
-    // }
-
-
-
+    
     public function userLogout(){
         Session::forget('user');
         toastr()->success("Logged Out Successfully.");

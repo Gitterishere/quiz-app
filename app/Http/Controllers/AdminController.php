@@ -6,6 +6,7 @@ use App\Models\Admin;
 use App\Models\Category;
 use App\Models\Mcq;
 use App\Models\Quiz;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Session;
@@ -39,8 +40,10 @@ class AdminController extends Controller
     public function dashboard(){
         $admin = Session::get('admin');
         if($admin){
+            $users = User::orderBy('id','desc')->paginate(5);
             return view('admin',[
                 "name"=>$admin->name,
+                "users"=>$users
             ]);
         }else{
             $admin = Session::get('admin');
