@@ -54,6 +54,8 @@ Route::view('user-forgot-password','user-forgot-password');
 Route::post('user-forgot-password',[UserController::class,'userForgotPassword']);
 Route::get('user-forgot-password/{email}',[UserController::class,'userRestForgotPassword']);
 Route::post('user-set-forgot-password',[UserController::class,'userSetForgotPassword']);
+Route::get('certificate',[UserController::class,'certificate']);
+Route::get('download-certificate',[UserController::class,'downloadCertificate']);
 
 Route::middleware('CheckUserAuth')->group(function(){
     Route::get('mcq/{id}/{name}',[UserController::class,'mcq']);

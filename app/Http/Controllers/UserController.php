@@ -10,11 +10,13 @@ use App\Models\MCQ_Record;
 use App\Models\Quiz;
 use App\Models\Record;
 use App\Models\User;
+use Barryvdh\DomPDF\PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Spatie\Browsershot\Browsershot;
 
 use function Flasher\Toastr\Prime\toastr;
 use function PHPSTORM_META\map;
@@ -154,6 +156,14 @@ class UserController extends Controller
         return view('user-login');
     }
 
+    public function searchQuiz(Request $request){
+        $quizData = Quiz::withCount('Mcq')->where('name','Like','%'.$request->search.'%')->get();
+        return view('quiz-search',[
+            "quizData" => $quizData,
+            "quiz" => $request->search
+        ]);
+    }
+
     public function userQuizList($id,$category){
 
         $quizData = Quiz::withCount('Mcq')->where('category_id',$id)->get();
@@ -268,13 +278,44 @@ class UserController extends Controller
         ]);
     }
 
-    public function searchQuiz(Request $request){
-        $quizData = Quiz::withCount('Mcq')->where('name','Like','%'.$request->search.'%')->get();
-        return view('quiz-search',[
-            "quizData" => $quizData,
-            "quiz" => $request->search
+    public function certificate(){
+        $data = [];
+
+        $data['quizName'] = str_replace('-',' ',Session::get('currentQuiz')['quizName']);
+        $data['userName'] = Session::get('user')['name'];
+
+        return view('certificate',[
+            "data"=> $data
+        ]);
+
+    }
+
+    public function downloadCertificate(){
+       $data = [];
+
+        $data['quizName'] = str_replace('-',' ',Session::get('currentQuiz')['quizName']);
+        $data['userName'] = Session::get('user')['name'];
+
+        $html = view('download-certificate',
+            ["data"=>$data]
+        )->render();
+        return response(Browsershot::html($html)->pdf())->withHeaders([
+            "Content-Type"=> "application/pdf",
+            "Content-disposition" => "attachment;filename=certificate.pdf"
         ]);
     }
+    // public function downloadCertificate(){
+    //    $data = [];
+
+    //     $data['quizName'] = str_replace('-',' ',Session::get('currentQuiz')['quizName']);
+    //     $data['userName'] = Session::get('user')['name'];
+
+    //     $pdf = PDF::loadView('certificate', $data);
+    //     return $pdf->download('certificate.pdf');
+
+    // }
+
+
 
     public function userLogout(){
         Session::forget('user');
